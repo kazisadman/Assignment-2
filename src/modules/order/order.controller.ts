@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createOrderInDb } from "./order.service";
+import { createOrderInDb, getAllorderDb, queryorderDb } from "./order.service";
 
 const createOrder = async (req: Request, res: Response) => {
   try {
@@ -16,4 +16,29 @@ const createOrder = async (req: Request, res: Response) => {
   }
 };
 
-export { createOrder };
+const getOrders = async (req: Request, res: Response) => {
+  try {
+    const searchTerm = req.query.email;
+    if (searchTerm) {
+      const result = await queryorderDb(searchTerm);
+
+      res.status(200).json({
+        success: true,
+        message: `Orders fetched successfully for user ${searchTerm}!`,
+        data: result,
+      });
+    } else {
+      const result = await getAllorderDb();
+
+      res.status(200).json({
+        success: true,
+        message: "Orders fetched successfully!",
+        data: result,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export { createOrder,getOrders };
