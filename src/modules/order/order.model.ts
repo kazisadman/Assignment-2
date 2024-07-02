@@ -1,5 +1,6 @@
-import mongoose, { Schema } from "mongoose";
-import Order from "./order.interface";
+import { Schema } from 'mongoose';
+import Order from './order.interface';
+import mongoose from 'mongoose';
 
 const orderSchema = new Schema<Order>({
   email: {
@@ -7,8 +8,9 @@ const orderSchema = new Schema<Order>({
     required: true,
   },
   productId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Product",
+    type: Schema.Types.ObjectId,
+    ref: 'Product',
+    required: true,
   },
   price: {
     type: Number,
@@ -20,6 +22,6 @@ const orderSchema = new Schema<Order>({
   },
 });
 
-const orderModel = mongoose.model("Order", orderSchema);
+const orderModel = mongoose.model('Order', orderSchema);
 
 export default orderModel;

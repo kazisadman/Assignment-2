@@ -3,7 +3,7 @@ type variants = {
   value: string;
 };
 
-type inventory = {
+export type inventory = {
   quantity: number;
   inStock: boolean;
 };

@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
 import {
   createProductDb,
   deleteProductByIdDb,
@@ -6,17 +6,25 @@ import {
   getProductByIdDb,
   queryProductDb,
   updateProductByIdDb,
-} from "./product.service";
+} from './product.service';
+import {productUpadateValidationSchema, productValidationSchema} from './product.validation';
+import productModel from './product.model';
 
 const createProduct = async (req: Request, res: Response) => {
   try {
     const product = req.body;
 
-    const result = await createProductDb(product);
+    const validatedData = productValidationSchema.parse(product);
+
+    const productData = await createProductDb(validatedData);
+
+    const result = await productModel
+      .findById(productData?._id)
+      .select('-_id -createdAt -updatedAt -__v -variants._id -inventory._id');
 
     res.status(200).json({
       success: true,
-      message: "Product created successfully!",
+      message: 'Product created successfully!',
       data: result,
     });
   } catch (error) {
@@ -29,11 +37,13 @@ const updateProductById = async (req: Request, res: Response) => {
     const product: object = req.body;
     const { productId } = req.params;
 
-    const result = await updateProductByIdDb(product, productId);
+    const validatedData = productUpadateValidationSchema.parse(product);
+
+    const result = await updateProductByIdDb(validatedData, productId);
 
     res.status(200).json({
       success: true,
-      message: "Product updated successfully!",
+      message: 'Product updated successfully!',
       data: result,
     });
   } catch (error) {
@@ -57,7 +67,7 @@ const getProducts = async (req: Request, res: Response) => {
 
       res.status(200).json({
         success: true,
-        message: "Products fetched successfully!",
+        message: 'Products fetched successfully!',
         data: result,
       });
     }
@@ -73,7 +83,7 @@ const getProductById = async (req: Request, res: Response) => {
 
     res.status(200).json({
       success: true,
-      message: "Products fetched successfully!",
+      message: 'Product fetched successfully!',
       data: result,
     });
   } catch (error) {
@@ -88,14 +98,13 @@ const deleteProductById = async (req: Request, res: Response) => {
 
     res.status(200).json({
       success: true,
-      message: "Product deleted successfully",
+      message: 'Product deleted successfully',
       data: null,
     });
   } catch (error) {
     console.log(error);
   }
 };
-
 
 export {
   createProduct,

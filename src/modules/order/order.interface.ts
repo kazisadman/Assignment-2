@@ -1,8 +1,8 @@
-import { ObjectId } from "mongoose";
+import { Types } from "mongoose";
 
 type Order = {
   email: string;
-  productId: ObjectId;
+  productId: Types.ObjectId;
   price: number;
   quantity: number;
 };
